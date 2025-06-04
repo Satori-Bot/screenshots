@@ -205,6 +205,9 @@ export default class Screenshots extends Events {
         this.$win?.setKiosk(true);
       });
 
+      // 防止窗口被系统缩放导致遮罩区域露出
+      this.$win.on('will-resize', (e) => e.preventDefault());
+
       this.$win.on('closed', () => {
         this.emit('windowClosed', this.$win);
         this.$win = null;
