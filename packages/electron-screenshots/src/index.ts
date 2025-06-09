@@ -14,6 +14,7 @@ import Event from './event';
 import getDisplay, { Display } from './getDisplay';
 import padStart from './padStart';
 import { Bounds, ScreenshotsData } from './preload';
+export { default as LongCapture } from './longCapture';
 
 export type LoggerFn = (...args: unknown[]) => void;
 export type Logger = Debugger | LoggerFn;

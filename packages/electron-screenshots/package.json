@@ -39,7 +39,9 @@
     "debug": "^4.3.4",
     "fs-extra": "^11.1.1",
     "node-screenshots": "^0.2.1",
-    "react-screenshots": "^0.5.22"
+    "react-screenshots": "^0.5.22",
+    "pngjs": "^7.0.0",
+    "uiohook-napi": "^0.6.2"
   },
   "peerDependencies": {
     "electron": ">=14"
