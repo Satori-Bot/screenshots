@@ -20,7 +20,7 @@ import Screenshots from "./screenshots";
 app.whenReady().then(() => {
   app.setAppUserModelId('com.electron.screenshots')
   const screenshots = new Screenshots();
-  globalShortcut.register("ctrl+shift+a", () => {
+  globalShortcut.register("CommandOrControl+Shift+A", () => {
     screenshots.startCapture();
     screenshots.$view.webContents.openDevTools();
   });

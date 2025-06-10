@@ -4,6 +4,7 @@ import './icons/iconfont.less'
 import './screenshots.less'
 import ScreenshotsBackground from './ScreenshotsBackground'
 import ScreenshotsCanvas from './ScreenshotsCanvas'
+import ScreenshotsAutoSelect from './ScreenshotsAutoSelect'
 import ScreenshotsContext from './ScreenshotsContext'
 import ScreenshotsOperations from './ScreenshotsOperations'
 import { Bounds, Emiter, History } from './types'
@@ -147,6 +148,7 @@ export default function Screenshots ({ url, width, height, lang, className, ...p
         onContextMenu={onContextMenu}
       >
         <ScreenshotsBackground />
+        {!bounds && <ScreenshotsAutoSelect />}
         <ScreenshotsCanvas ref={canvasContextRef} />
         <ScreenshotsOperations />
       </div>
