@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { app, BrowserWindow, globalShortcut } from 'electron';
-import Screenshots from '.';
+import fs from 'fs-extra';
+import Screenshots, { LongCapture } from '.';
 
 app.whenReady().then(() => {
   const screenshots = new Screenshots({
@@ -9,10 +10,20 @@ app.whenReady().then(() => {
     },
     singleWindow: true,
   });
+  const long = new LongCapture(screenshots, { interval: 800 });
   screenshots.$view.webContents.openDevTools();
 
   globalShortcut.register('ctrl+shift+a', () => {
     screenshots.startCapture();
+  });
+
+  globalShortcut.register('ctrl+shift+l', async () => {
+    await long.start();
+  });
+
+  globalShortcut.register('ctrl+shift+s', () => {
+    const buffer = long.stop();
+    fs.writeFileSync('long.png', buffer);
   });
 
   screenshots.on('windowCreated', ($win) => {
