@@ -79,7 +79,8 @@ export default function calculateNodeSize (
 ): Size {
   if (!hiddenTextarea) {
     hiddenTextarea = document.createElement('textarea')
-    hiddenTextarea.setAttribute('tab-index', '-1')
+    // ensure the hidden textarea cannot receive focus when navigating with TAB
+    hiddenTextarea.setAttribute('tabindex', '-1')
     document.body.appendChild(hiddenTextarea)
   }
 
