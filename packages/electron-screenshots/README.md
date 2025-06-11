@@ -162,6 +162,7 @@ export interface ScreenshotsOpts {
 | `startCapture(): Promise<void>`                   | 调用截图方法截图 | -      |
 | `endCapture(): Promise<void>`                     | 手动结束截图     | -      |
 | `setLang(lang: Lang): Promise<void>`              | 修改语言         | -      |
+| `stitchLongScreenshot(images: ImageData[], rect: Bounds, mode?: 'y' | 'xy'): HTMLCanvasElement` | 滚动截屏拼接 | `HTMLCanvasElement`
 
 ## Events
 
