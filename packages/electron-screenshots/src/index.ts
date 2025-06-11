@@ -31,6 +31,7 @@ export interface Lang {
   operation_arrow_title?: string;
   operation_ellipse_title?: string;
   operation_rectangle_title?: string;
+  operation_long_title?: string;
 }
 
 export interface ScreenshotsOpts {
@@ -56,6 +57,8 @@ export default class Screenshots extends Events {
   private logger: Logger;
 
   private singleWindow: boolean;
+
+  private display: Display | null = null;
 
   private isReady = new Promise<void>((resolve) => {
     ipcMain.once('SCREENSHOTS:ready', () => {
@@ -85,6 +88,7 @@ export default class Screenshots extends Events {
     this.logger('startCapture');
 
     const display = getDisplay();
+    this.display = display;
 
     const [imageUrl] = await Promise.all([this.capture(display), this.isReady]);
 
@@ -396,5 +400,20 @@ export default class Screenshots extends Events {
         this.endCapture();
       },
     );
+
+    ipcMain.handle('SCREENSHOTS:startLong', () => {
+      this.$win?.setIgnoreMouseEvents(true, { forward: true });
+    });
+
+    ipcMain.handle('SCREENSHOTS:stopLong', () => {
+      this.$win?.setIgnoreMouseEvents(false);
+    });
+
+    ipcMain.handle('SCREENSHOTS:captureLong', async () => {
+      if (!this.display) {
+        return null;
+      }
+      return this.capture(this.display);
+    });
   }
 }
