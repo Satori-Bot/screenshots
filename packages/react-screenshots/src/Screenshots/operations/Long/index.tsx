@@ -5,7 +5,7 @@ import useCall from '../../hooks/useCall'
 import useReset from '../../hooks/useReset'
 
 export default function Long (): ReactElement {
-  const { bounds, width, height, lang } = useStore()
+  const { bounds, lang } = useStore()
   const call = useCall()
   const reset = useReset()
   const [capturing, setCapturing] = useState(false)
