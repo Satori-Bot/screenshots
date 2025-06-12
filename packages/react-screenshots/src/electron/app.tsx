@@ -90,6 +90,7 @@ export default function App (): JSX.Element {
         url={url}
         width={width}
         height={height}
+        display={display}
         lang={lang}
         onSave={onSave}
         onCancel={onCancel}

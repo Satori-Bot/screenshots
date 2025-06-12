@@ -38,6 +38,9 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "dependencies": {
+    "@techstark/opencv-js": "^4.10.0-release.1"
+  },
   "peerDependencies": {
     "react": ">=16.8",
     "react-dom": ">=16.8"

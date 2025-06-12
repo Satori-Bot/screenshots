@@ -14,6 +14,8 @@ interface GlobalScreenshots {
   save: (arrayBuffer: ArrayBuffer, data: ScreenshotsData) => void
   cancel: () => void
   ok: (arrayBuffer: ArrayBuffer, data: ScreenshotsData) => void
+  longStart: (data: ScreenshotsData) => void
+  longStop: () => void
   on: (channel: string, fn: ScreenshotsListener) => void
   off: (channel: string, fn: ScreenshotsListener) => void
 }
