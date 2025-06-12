@@ -57,6 +57,9 @@ export default class Screenshots extends Events {
 
   private singleWindow: boolean;
 
+  private longTimer: NodeJS.Timeout | null = null;
+  private longDisplay: Display | null = null;
+
   private isReady = new Promise<void>((resolve) => {
     ipcMain.once('SCREENSHOTS:ready', () => {
       this.logger('SCREENSHOTS:ready');
@@ -396,5 +399,30 @@ export default class Screenshots extends Events {
         this.endCapture();
       },
     );
+
+    ipcMain.on('SCREENSHOTS:long-start', async (_e, data: ScreenshotsData) => {
+      this.logger('SCREENSHOTS:long-start');
+      this.longDisplay = data.display;
+      if (this.$win) {
+        this.$win.setIgnoreMouseEvents(true, { forward: true });
+      }
+      this.longTimer = setInterval(async () => {
+        if (!this.longDisplay) return;
+        const url = await this.capture(this.longDisplay);
+        this.$view.webContents.send('SCREENSHOTS:long-add', url);
+      }, 500);
+    });
+
+    ipcMain.on('SCREENSHOTS:long-stop', () => {
+      this.logger('SCREENSHOTS:long-stop');
+      if (this.$win) {
+        this.$win.setIgnoreMouseEvents(false);
+      }
+      if (this.longTimer) {
+        clearInterval(this.longTimer);
+        this.longTimer = null;
+      }
+      this.$view.webContents.send('SCREENSHOTS:long-end');
+    });
   }
 }

@@ -11,6 +11,7 @@ export interface Lang {
   operation_arrow_title: string
   operation_ellipse_title: string
   operation_rectangle_title: string
+  operation_long_title: string
 }
 
 const zhCN: Lang = {
@@ -25,7 +26,8 @@ const zhCN: Lang = {
   operation_brush_title: '画笔',
   operation_arrow_title: '箭头',
   operation_ellipse_title: '椭圆',
-  operation_rectangle_title: '矩形'
+  operation_rectangle_title: '矩形',
+  operation_long_title: '长截图'
 }
 
 export default zhCN

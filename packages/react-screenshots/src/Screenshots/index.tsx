@@ -7,6 +7,7 @@ import ScreenshotsCanvas from './ScreenshotsCanvas'
 import ScreenshotsContext from './ScreenshotsContext'
 import ScreenshotsOperations from './ScreenshotsOperations'
 import { Bounds, Emiter, History } from './types'
+import { Display } from '../electron/app'
 import useGetLoadedImage from './useGetLoadedImage'
 import zhCN, { Lang } from './zh_CN'
 
@@ -14,12 +15,13 @@ export interface ScreenshotsProps {
   url?: string
   width: number
   height: number
+  display?: Display
   lang?: Partial<Lang>
   className?: string
   [key: string]: unknown
 }
 
-export default function Screenshots ({ url, width, height, lang, className, ...props }: ScreenshotsProps): ReactElement {
+export default function Screenshots ({ url, width, height, display, lang, className, ...props }: ScreenshotsProps): ReactElement {
   const image = useGetLoadedImage(url)
   const canvasContextRef = useRef<CanvasRenderingContext2D>(null)
   const emiterRef = useRef<Emiter>({})
@@ -35,6 +37,7 @@ export default function Screenshots ({ url, width, height, lang, className, ...p
     url,
     width,
     height,
+    display,
     image,
     lang: {
       ...zhCN,

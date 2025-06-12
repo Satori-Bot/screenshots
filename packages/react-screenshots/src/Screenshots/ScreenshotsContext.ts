@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import { EmiterRef, History, Bounds, CanvasContextRef } from './types'
+import { Display } from '../electron/app'
 import zhCN, { Lang } from './zh_CN'
 
 export interface ScreenshotsContextStore {
@@ -7,6 +8,7 @@ export interface ScreenshotsContextStore {
   image: HTMLImageElement | null
   width: number
   height: number
+  display?: Display
   lang: Lang
   emiterRef: EmiterRef
   canvasContextRef: CanvasContextRef
@@ -35,6 +37,7 @@ export default React.createContext<ScreenshotsContextValue>({
     image: null,
     width: 0,
     height: 0,
+    display: undefined,
     lang: zhCN,
     emiterRef: { current: {} },
     canvasContextRef: { current: null },
