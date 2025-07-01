@@ -43,6 +43,15 @@ contextBridge.exposeInMainWorld('screenshots', {
 
     ipcRenderer.send('SCREENSHOTS:cancel');
   },
+  startLong: () => {
+    ipcRenderer.invoke('SCREENSHOTS:startLong');
+  },
+  stopLong: () => {
+    ipcRenderer.invoke('SCREENSHOTS:stopLong');
+  },
+  captureLong: () => {
+    return ipcRenderer.invoke('SCREENSHOTS:captureLong');
+  },
   ok: (arrayBuffer: ArrayBuffer, data: ScreenshotsData) => {
     console.log('contextBridge ok', arrayBuffer, data);
 
