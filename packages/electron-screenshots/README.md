@@ -246,3 +246,20 @@ screenshots.startCapture();
 ## Screenshot
 
 ![screenshot](../../screenshot.jpg)
+
+## Long screenshot example
+
+`LongCapture` helps to take scrolling screenshots. It periodically captures the
+screen and stitches the frames by template matching.
+
+```ts
+import Screenshots, { LongCapture } from 'electron-screenshots'
+
+const screenshots = new Screenshots()
+const long = new LongCapture(screenshots, { interval: 800 })
+
+await long.start()
+// user scrolls the page slowly...
+const buffer = long.stop()
+require('fs').writeFileSync('long.png', buffer)
+```
