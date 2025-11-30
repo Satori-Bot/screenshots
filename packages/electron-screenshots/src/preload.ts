@@ -48,6 +48,11 @@ contextBridge.exposeInMainWorld('screenshots', {
 
     ipcRenderer.send('SCREENSHOTS:ok', Buffer.from(arrayBuffer), data);
   },
+  startScroll: (display: Display) => {
+    console.log('contextBridge start scroll');
+
+    ipcRenderer.send('SCREENSHOTS:scroll-start', display);
+  },
   on: (channel: string, fn: ScreenshotsListener) => {
     console.log('contextBridge on', fn);
 

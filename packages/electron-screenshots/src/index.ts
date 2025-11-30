@@ -7,6 +7,7 @@ import {
   dialog,
   ipcMain,
   nativeImage,
+  globalShortcut,
 } from 'electron';
 import Events from 'events';
 import fs from 'fs-extra';
@@ -31,6 +32,7 @@ export interface Lang {
   operation_arrow_title?: string;
   operation_ellipse_title?: string;
   operation_rectangle_title?: string;
+  operation_scroll_title?: string;
 }
 
 export interface ScreenshotsOpts {
@@ -56,6 +58,10 @@ export default class Screenshots extends Events {
   private logger: Logger;
 
   private singleWindow: boolean;
+
+  private scrollDisplay: Display | null = null;
+
+  private isScrollCapturing = false;
 
   private isReady = new Promise<void>((resolve) => {
     ipcMain.once('SCREENSHOTS:ready', () => {
@@ -84,6 +90,8 @@ export default class Screenshots extends Events {
   public async startCapture(): Promise<void> {
     this.logger('startCapture');
 
+    this.stopScrollCapture(false, false);
+
     const display = getDisplay();
 
     const [imageUrl] = await Promise.all([this.capture(display), this.isReady]);
@@ -98,6 +106,7 @@ export default class Screenshots extends Events {
    */
   public async endCapture(): Promise<void> {
     this.logger('endCapture');
+    this.stopScrollCapture(false, false);
     await this.reset();
 
     if (!this.$win) {
@@ -206,6 +215,7 @@ export default class Screenshots extends Events {
       });
 
       this.$win.on('closed', () => {
+        this.stopScrollCapture(false, false);
         this.emit('windowClosed', this.$win);
         this.$win = null;
       });
@@ -396,5 +406,72 @@ export default class Screenshots extends Events {
         this.endCapture();
       },
     );
+
+    ipcMain.on('SCREENSHOTS:scroll-start', (e, display: Display) => {
+      this.logger('SCREENSHOTS:scroll-start');
+
+      this.startScrollCapture(display);
+    });
+  }
+
+  private startScrollCapture(display: Display): void {
+    this.stopScrollCapture(false, false);
+    this.scrollDisplay = display;
+    this.isScrollCapturing = true;
+
+    this.$win?.hide();
+    this.$win?.setKiosk(false);
+    this.$win?.setAlwaysOnTop(false);
+
+    this.registerScrollCaptureShortcuts();
+  }
+
+  private registerScrollCaptureShortcuts(): void {
+    globalShortcut.unregister('Control+Alt+S');
+    globalShortcut.unregister('Control+Alt+X');
+
+    globalShortcut.register('Control+Alt+S', async () => {
+      this.logger('SCREENSHOTS:scroll-shortcut-capture');
+
+      if (!this.isScrollCapturing || !this.scrollDisplay) {
+        return;
+      }
+
+      try {
+        const imageUrl = await this.capture(this.scrollDisplay);
+        this.$view.webContents.send('SCREENSHOTS:scrollCapture', imageUrl);
+      } catch (err) {
+        this.logger('SCREENSHOTS:scroll-capture error %o', err);
+      }
+    });
+
+    globalShortcut.register('Control+Alt+X', () => {
+      this.logger('SCREENSHOTS:scroll-shortcut-end');
+
+      this.stopScrollCapture(true, true);
+    });
+  }
+
+  private stopScrollCapture(sendEvent = false, showWindow = false): void {
+    if (!this.isScrollCapturing) {
+      return;
+    }
+
+    globalShortcut.unregister('Control+Alt+S');
+    globalShortcut.unregister('Control+Alt+X');
+
+    this.isScrollCapturing = false;
+    this.scrollDisplay = null;
+
+    if (showWindow && this.$win) {
+      this.$win.show();
+      this.$win.focus();
+      this.$win.setKiosk(true);
+      this.$win.setAlwaysOnTop(true);
+    }
+
+    if (sendEvent) {
+      this.$view.webContents.send('SCREENSHOTS:scrollEnd');
+    }
   }
 }
