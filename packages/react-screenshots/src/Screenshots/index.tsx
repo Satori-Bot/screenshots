@@ -16,6 +16,7 @@ export interface ScreenshotsProps {
   height: number
   lang?: Partial<Lang>
   className?: string
+  onScrollCapture?: (bounds: Bounds, payload: { url: string, width: number, height: number }) => void
   [key: string]: unknown
 }
 

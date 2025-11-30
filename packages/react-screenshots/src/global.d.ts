@@ -1,7 +1,7 @@
 import { Display } from './electron/app'
 import { Bounds } from './Screenshots/types'
 
-type ScreenshotsListener = (...args: never[]) => void
+type ScreenshotsListener = (...args: unknown[]) => void
 
 interface ScreenshotsData {
   bounds: Bounds
@@ -14,6 +14,7 @@ interface GlobalScreenshots {
   save: (arrayBuffer: ArrayBuffer, data: ScreenshotsData) => void
   cancel: () => void
   ok: (arrayBuffer: ArrayBuffer, data: ScreenshotsData) => void
+  startScroll: (display: Display) => void
   on: (channel: string, fn: ScreenshotsListener) => void
   off: (channel: string, fn: ScreenshotsListener) => void
 }
